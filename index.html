@@ -58,13 +58,86 @@
 
         body {
             min-height: 100vh;
-            background: linear-gradient(145deg, #020408 0%, #070f1f 30%, #0a0a0a 55%, #05050c 80%, #000000 100%);
+            background: #010208;
             display: flex;
             justify-content: center;
             align-items: center;
             font-family: 'Cormorant Garamond', serif;
             overflow-x: hidden;
             padding: 20px;
+        }
+
+        /* === AURORA BOREALIS === */
+        .aurora {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+        .aurora-layer {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.15;
+            animation: auroraDrift linear infinite;
+        }
+        .aurora-layer:nth-child(1) {
+            width: 700px;
+            height: 500px;
+            background: radial-gradient(ellipse, rgba(0, 255, 120, 0.5), transparent);
+            top: -10%;
+            left: -10%;
+            animation-duration: 18s;
+            opacity: 0.2;
+        }
+        .aurora-layer:nth-child(2) {
+            width: 600px;
+            height: 400px;
+            background: radial-gradient(ellipse, rgba(0, 200, 255, 0.4), transparent);
+            top: 20%;
+            right: -5%;
+            animation-duration: 22s;
+            animation-direction: reverse;
+            opacity: 0.18;
+        }
+        .aurora-layer:nth-child(3) {
+            width: 800px;
+            height: 350px;
+            background: radial-gradient(ellipse, rgba(100, 50, 255, 0.35), transparent);
+            top: 40%;
+            left: 30%;
+            animation-duration: 25s;
+            opacity: 0.12;
+        }
+        .aurora-layer:nth-child(4) {
+            width: 500px;
+            height: 600px;
+            background: radial-gradient(ellipse, rgba(0, 230, 180, 0.3), transparent);
+            bottom: -10%;
+            right: 10%;
+            animation-duration: 20s;
+            animation-direction: reverse;
+            opacity: 0.15;
+        }
+        .aurora-layer:nth-child(5) {
+            width: 400px;
+            height: 300px;
+            background: radial-gradient(ellipse, rgba(50, 180, 255, 0.35), transparent);
+            top: 5%;
+            left: 50%;
+            animation-duration: 15s;
+            opacity: 0.1;
+        }
+        @keyframes auroraDrift {
+            0%   { transform: translate(0, 0) scale(1) rotate(0deg); }
+            25%  { transform: translate(60px, -30px) scale(1.1) rotate(5deg); }
+            50%  { transform: translate(-30px, 40px) scale(0.95) rotate(-3deg); }
+            75%  { transform: translate(40px, 20px) scale(1.05) rotate(4deg); }
+            100% { transform: translate(0, 0) scale(1) rotate(0deg); }
         }
 
         /* === STARS === */
@@ -171,7 +244,7 @@
             z-index: 1;
         }
 
-        /* Wax seal on flap */
+        /* Wax seal on flap - aurora heart */
         .seal {
             position: absolute;
             top: 38%;
@@ -179,21 +252,23 @@
             transform: translate(-50%, -50%);
             width: 76px;
             height: 76px;
-            background: radial-gradient(circle at 35% 30%, #2a4a7a, #0f1a30 60%, #060b15);
+            background: radial-gradient(circle at 35% 30%, #00e8a0, #0078d0 40%, #4020a0 70%, #101030);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 30px;
-            color: #7ab0ff;
+            color: #b0ffe0;
             box-shadow:
-                0 0 30px rgba(40, 100, 220, 0.15),
+                0 0 40px rgba(0, 230, 150, 0.2),
+                0 0 80px rgba(0, 120, 220, 0.1),
                 inset 0 -4px 12px rgba(0,0,0,0.5),
-                inset 0 2px 6px rgba(100, 180, 255, 0.1);
-            border: 1.5px solid rgba(100, 170, 255, 0.12);
+                inset 0 2px 6px rgba(100, 255, 200, 0.15);
+            border: 1.5px solid rgba(100, 255, 200, 0.1);
             z-index: 20;
             transition: all 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
             user-select: none;
+            text-shadow: 0 0 20px rgba(0, 255, 180, 0.3);
         }
         .seal.open {
             transform: translate(-50%, -50%) scale(0) rotate(180deg);
@@ -652,6 +727,15 @@
     </style>
 </head>
 <body>
+
+    <!-- Aurora borealis layers -->
+    <div class="aurora">
+        <div class="aurora-layer"></div>
+        <div class="aurora-layer"></div>
+        <div class="aurora-layer"></div>
+        <div class="aurora-layer"></div>
+        <div class="aurora-layer"></div>
+    </div>
 
     <canvas id="stars-canvas"></canvas>
     <canvas id="confetti-canvas"></canvas>
