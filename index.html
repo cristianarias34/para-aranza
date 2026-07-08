@@ -240,43 +240,91 @@
             pointer-events: auto;
         }
 
-        /* Decorative corners on the letter */
-        .letter::before, .letter::after {
-            content: '\269C';
+        /* Decorative corners on the letter - using SVG elements */
+        .letter-crn {
             position: absolute;
-            font-size: 22px;
+            width: 32px;
+            height: 32px;
             pointer-events: none;
-            opacity: 0.08;
+            opacity: 0.09;
+            z-index: 1;
         }
-        .letter::before {
-            top: 6px; left: 8px;
-            color: #b8d4ff;
+        .letter-crn svg {
+            display: block;
+            width: 100%;
+            height: 100%;
         }
-        .letter::after {
-            bottom: 6px; right: 8px;
-            color: #ffffff;
+        .letter-crn.tl { top: 5px; left: 6px; color: #b8d4ff; }
+        .letter-crn.tr { top: 5px; right: 6px; color: #ffffff; transform: scaleX(-1); }
+        .letter-crn.bl { bottom: 5px; left: 6px; color: #ffffff; transform: scaleY(-1); }
+        .letter-crn.br { bottom: 5px; right: 6px; color: #b8d4ff; transform: scaleX(-1) scaleY(-1); }
+        }
+
+        /* === LILY SVG DECORATIONS === */
+        .lily-icon {
+            display: inline-block;
+            vertical-align: middle;
+            flex-shrink: 0;
+        }
+        .lily-icon svg {
+            display: block;
+            width: 100%;
+            height: 100%;
         }
 
         /* Corner lily decorations on envelope */
         .env-lily {
             position: absolute;
-            font-size: 20px;
-            opacity: 0.06;
+            width: 36px;
+            height: 36px;
+            opacity: 0.12;
             pointer-events: none;
             z-index: 1;
+            transition: opacity 0.6s;
         }
-        .env-lily.tl { top: 10px; left: 12px; color: #b8d4ff; transform: rotate(-15deg); }
-        .env-lily.tr { top: 10px; right: 12px; color: #ffffff; transform: rotate(15deg) scaleX(-1); }
-        .env-lily.bl { bottom: 10px; left: 12px; color: #ffffff; transform: rotate(15deg) scaleY(-1); }
-        .env-lily.br { bottom: 10px; right: 12px; color: #b8d4ff; transform: rotate(-15deg) scaleX(-1); }
+        .env-lily.tl { top: 8px; left: 10px; transform: rotate(-10deg); }
+        .env-lily.tr { top: 8px; right: 10px; transform: rotate(10deg) scaleX(-1); }
+        .env-lily.bl { bottom: 8px; left: 10px; transform: rotate(10deg) scaleY(-1); }
+        .env-lily.br { bottom: 8px; right: 10px; transform: rotate(-10deg) scaleX(-1); }
+
+        .env-lily.white svg { color: rgba(255, 255, 255, 0.8); }
+        .env-lily.blue svg { color: rgba(100, 170, 255, 0.6); }
+
+        /* Lily corners on the letter */
+        .letter-lily {
+            position: absolute;
+            width: 28px;
+            height: 28px;
+            pointer-events: none;
+            opacity: 0.07;
+            z-index: 1;
+        }
+        .letter-lily.tl { top: 5px; left: 6px; transform: rotate(-15deg); color: #b8d4ff; }
+        .letter-lily.tr { top: 5px; right: 6px; transform: rotate(15deg) scaleX(-1); color: #ffffff; }
+        .letter-lily.bl { bottom: 5px; left: 6px; transform: rotate(15deg) scaleY(-1); color: #ffffff; }
+        .letter-lily.br { bottom: 5px; right: 6px; transform: rotate(-15deg) scaleX(-1); color: #b8d4ff; }
 
         /* Lily divider in letter */
         .lily-divider {
             text-align: center;
             margin: 16px 0;
-            color: rgba(150, 200, 255, 0.08);
-            font-size: 14px;
-            letter-spacing: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            opacity: 0.08;
+        }
+        .lily-divider .lily-icon {
+            width: 18px;
+            height: 18px;
+        }
+        .lily-divider .lily-icon.white svg { color: rgba(255, 255, 255, 0.7); }
+        .lily-divider .lily-icon.blue svg { color: rgba(100, 170, 255, 0.7); }
+        .lily-divider .line {
+            flex: 1;
+            max-width: 60px;
+            height: 1px;
+            background: rgba(150, 200, 255, 0.1);
         }
 
         /* Orion watermark inside letter */
@@ -501,17 +549,103 @@
                         <div class="seal" id="seal">&#x2764;</div>
                     </div>
 
-                    <!-- Lily corners -->
-                    <div class="env-lily tl">&#x269C;</div>
-                    <div class="env-lily tr">&#x269C;</div>
-                    <div class="env-lily bl">&#x269C;</div>
-                    <div class="env-lily br">&#x269C;</div>
+                    <!-- Lily corners with SVG -->
+                    <div class="env-lily tl blue">
+                        <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <ellipse cx="50" cy="18" rx="14" ry="28" fill="currentColor" transform="rotate(0 50 50)" opacity="0.7"/>
+                            <ellipse cx="50" cy="18" rx="14" ry="28" fill="currentColor" transform="rotate(60 50 50)" opacity="0.7"/>
+                            <ellipse cx="50" cy="18" rx="14" ry="28" fill="currentColor" transform="rotate(120 50 50)" opacity="0.7"/>
+                            <ellipse cx="50" cy="18" rx="14" ry="28" fill="currentColor" transform="rotate(180 50 50)" opacity="0.7"/>
+                            <ellipse cx="50" cy="18" rx="14" ry="28" fill="currentColor" transform="rotate(240 50 50)" opacity="0.7"/>
+                            <ellipse cx="50" cy="18" rx="14" ry="28" fill="currentColor" transform="rotate(300 50 50)" opacity="0.7"/>
+                            <circle cx="50" cy="50" r="7" fill="white" opacity="0.5"/>
+                        </svg>
+                    </div>
+                    <div class="env-lily tr white">
+                        <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <ellipse cx="50" cy="18" rx="14" ry="28" fill="currentColor" transform="rotate(0 50 50)" opacity="0.7"/>
+                            <ellipse cx="50" cy="18" rx="14" ry="28" fill="currentColor" transform="rotate(60 50 50)" opacity="0.7"/>
+                            <ellipse cx="50" cy="18" rx="14" ry="28" fill="currentColor" transform="rotate(120 50 50)" opacity="0.7"/>
+                            <ellipse cx="50" cy="18" rx="14" ry="28" fill="currentColor" transform="rotate(180 50 50)" opacity="0.7"/>
+                            <ellipse cx="50" cy="18" rx="14" ry="28" fill="currentColor" transform="rotate(240 50 50)" opacity="0.7"/>
+                            <ellipse cx="50" cy="18" rx="14" ry="28" fill="currentColor" transform="rotate(300 50 50)" opacity="0.7"/>
+                            <circle cx="50" cy="50" r="7" fill="#b8d4ff" opacity="0.4"/>
+                        </svg>
+                    </div>
+                    <div class="env-lily bl white">
+                        <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <ellipse cx="50" cy="18" rx="14" ry="28" fill="currentColor" transform="rotate(0 50 50)" opacity="0.7"/>
+                            <ellipse cx="50" cy="18" rx="14" ry="28" fill="currentColor" transform="rotate(60 50 50)" opacity="0.7"/>
+                            <ellipse cx="50" cy="18" rx="14" ry="28" fill="currentColor" transform="rotate(120 50 50)" opacity="0.7"/>
+                            <ellipse cx="50" cy="18" rx="14" ry="28" fill="currentColor" transform="rotate(180 50 50)" opacity="0.7"/>
+                            <ellipse cx="50" cy="18" rx="14" ry="28" fill="currentColor" transform="rotate(240 50 50)" opacity="0.7"/>
+                            <ellipse cx="50" cy="18" rx="14" ry="28" fill="currentColor" transform="rotate(300 50 50)" opacity="0.7"/>
+                            <circle cx="50" cy="50" r="7" fill="#b8d4ff" opacity="0.4"/>
+                        </svg>
+                    </div>
+                    <div class="env-lily br blue">
+                        <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <ellipse cx="50" cy="18" rx="14" ry="28" fill="currentColor" transform="rotate(0 50 50)" opacity="0.7"/>
+                            <ellipse cx="50" cy="18" rx="14" ry="28" fill="currentColor" transform="rotate(60 50 50)" opacity="0.7"/>
+                            <ellipse cx="50" cy="18" rx="14" ry="28" fill="currentColor" transform="rotate(120 50 50)" opacity="0.7"/>
+                            <ellipse cx="50" cy="18" rx="14" ry="28" fill="currentColor" transform="rotate(180 50 50)" opacity="0.7"/>
+                            <ellipse cx="50" cy="18" rx="14" ry="28" fill="currentColor" transform="rotate(240 50 50)" opacity="0.7"/>
+                            <ellipse cx="50" cy="18" rx="14" ry="28" fill="currentColor" transform="rotate(300 50 50)" opacity="0.7"/>
+                            <circle cx="50" cy="50" r="7" fill="white" opacity="0.5"/>
+                        </svg>
+                    </div>
 
                     <!-- Letter -->
                     <div class="letter-wrapper">
                         <div class="letter letter-content-hidden" id="letter">
 
                             <div class="letter-watermark">&#x1F436;</div>
+
+                            <!-- Letter corner decorations -->
+                            <div class="letter-crn tl">
+                                <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <ellipse cx="50" cy="18" rx="13" ry="26" fill="currentColor" transform="rotate(0 50 50)" opacity="0.6"/>
+                                    <ellipse cx="50" cy="18" rx="13" ry="26" fill="currentColor" transform="rotate(60 50 50)" opacity="0.6"/>
+                                    <ellipse cx="50" cy="18" rx="13" ry="26" fill="currentColor" transform="rotate(120 50 50)" opacity="0.6"/>
+                                    <ellipse cx="50" cy="18" rx="13" ry="26" fill="currentColor" transform="rotate(180 50 50)" opacity="0.6"/>
+                                    <ellipse cx="50" cy="18" rx="13" ry="26" fill="currentColor" transform="rotate(240 50 50)" opacity="0.6"/>
+                                    <ellipse cx="50" cy="18" rx="13" ry="26" fill="currentColor" transform="rotate(300 50 50)" opacity="0.6"/>
+                                    <circle cx="50" cy="50" r="6" fill="white" opacity="0.3"/>
+                                </svg>
+                            </div>
+                            <div class="letter-crn tr">
+                                <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <ellipse cx="50" cy="18" rx="13" ry="26" fill="currentColor" transform="rotate(0 50 50)" opacity="0.6"/>
+                                    <ellipse cx="50" cy="18" rx="13" ry="26" fill="currentColor" transform="rotate(60 50 50)" opacity="0.6"/>
+                                    <ellipse cx="50" cy="18" rx="13" ry="26" fill="currentColor" transform="rotate(120 50 50)" opacity="0.6"/>
+                                    <ellipse cx="50" cy="18" rx="13" ry="26" fill="currentColor" transform="rotate(180 50 50)" opacity="0.6"/>
+                                    <ellipse cx="50" cy="18" rx="13" ry="26" fill="currentColor" transform="rotate(240 50 50)" opacity="0.6"/>
+                                    <ellipse cx="50" cy="18" rx="13" ry="26" fill="currentColor" transform="rotate(300 50 50)" opacity="0.6"/>
+                                    <circle cx="50" cy="50" r="6" fill="#b8d4ff" opacity="0.2"/>
+                                </svg>
+                            </div>
+                            <div class="letter-crn bl">
+                                <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <ellipse cx="50" cy="18" rx="13" ry="26" fill="currentColor" transform="rotate(0 50 50)" opacity="0.6"/>
+                                    <ellipse cx="50" cy="18" rx="13" ry="26" fill="currentColor" transform="rotate(60 50 50)" opacity="0.6"/>
+                                    <ellipse cx="50" cy="18" rx="13" ry="26" fill="currentColor" transform="rotate(120 50 50)" opacity="0.6"/>
+                                    <ellipse cx="50" cy="18" rx="13" ry="26" fill="currentColor" transform="rotate(180 50 50)" opacity="0.6"/>
+                                    <ellipse cx="50" cy="18" rx="13" ry="26" fill="currentColor" transform="rotate(240 50 50)" opacity="0.6"/>
+                                    <ellipse cx="50" cy="18" rx="13" ry="26" fill="currentColor" transform="rotate(300 50 50)" opacity="0.6"/>
+                                    <circle cx="50" cy="50" r="6" fill="#b8d4ff" opacity="0.2"/>
+                                </svg>
+                            </div>
+                            <div class="letter-crn br">
+                                <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <ellipse cx="50" cy="18" rx="13" ry="26" fill="currentColor" transform="rotate(0 50 50)" opacity="0.6"/>
+                                    <ellipse cx="50" cy="18" rx="13" ry="26" fill="currentColor" transform="rotate(60 50 50)" opacity="0.6"/>
+                                    <ellipse cx="50" cy="18" rx="13" ry="26" fill="currentColor" transform="rotate(120 50 50)" opacity="0.6"/>
+                                    <ellipse cx="50" cy="18" rx="13" ry="26" fill="currentColor" transform="rotate(180 50 50)" opacity="0.6"/>
+                                    <ellipse cx="50" cy="18" rx="13" ry="26" fill="currentColor" transform="rotate(240 50 50)" opacity="0.6"/>
+                                    <ellipse cx="50" cy="18" rx="13" ry="26" fill="currentColor" transform="rotate(300 50 50)" opacity="0.6"/>
+                                    <circle cx="50" cy="50" r="6" fill="white" opacity="0.3"/>
+                                </svg>
+                            </div>
 
                             <div class="letter-date">Bajo un cielo infinito de estrellas...</div>
 
@@ -566,7 +700,43 @@
                     algo que vale la pena cuidar con delicadeza.
                                 </p>
 
-                                <div class="lily-divider">&#x269C; &#x269C; &#x269C;</div>
+                                <div class="lily-divider">
+                                    <span class="line"></span>
+                                    <span class="lily-icon white">
+                                        <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <ellipse cx="50" cy="18" rx="10" ry="22" fill="currentColor" transform="rotate(0 50 50)" opacity="0.8"/>
+                                            <ellipse cx="50" cy="18" rx="10" ry="22" fill="currentColor" transform="rotate(60 50 50)" opacity="0.8"/>
+                                            <ellipse cx="50" cy="18" rx="10" ry="22" fill="currentColor" transform="rotate(120 50 50)" opacity="0.8"/>
+                                            <ellipse cx="50" cy="18" rx="10" ry="22" fill="currentColor" transform="rotate(180 50 50)" opacity="0.8"/>
+                                            <ellipse cx="50" cy="18" rx="10" ry="22" fill="currentColor" transform="rotate(240 50 50)" opacity="0.8"/>
+                                            <ellipse cx="50" cy="18" rx="10" ry="22" fill="currentColor" transform="rotate(300 50 50)" opacity="0.8"/>
+                                            <circle cx="50" cy="50" r="5" fill="#b8d4ff" opacity="0.5"/>
+                                        </svg>
+                                    </span>
+                                    <span class="lily-icon blue">
+                                        <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <ellipse cx="50" cy="18" rx="10" ry="22" fill="currentColor" transform="rotate(0 50 50)" opacity="0.8"/>
+                                            <ellipse cx="50" cy="18" rx="10" ry="22" fill="currentColor" transform="rotate(60 50 50)" opacity="0.8"/>
+                                            <ellipse cx="50" cy="18" rx="10" ry="22" fill="currentColor" transform="rotate(120 50 50)" opacity="0.8"/>
+                                            <ellipse cx="50" cy="18" rx="10" ry="22" fill="currentColor" transform="rotate(180 50 50)" opacity="0.8"/>
+                                            <ellipse cx="50" cy="18" rx="10" ry="22" fill="currentColor" transform="rotate(240 50 50)" opacity="0.8"/>
+                                            <ellipse cx="50" cy="18" rx="10" ry="22" fill="currentColor" transform="rotate(300 50 50)" opacity="0.8"/>
+                                            <circle cx="50" cy="50" r="5" fill="white" opacity="0.4"/>
+                                        </svg>
+                                    </span>
+                                    <span class="lily-icon white">
+                                        <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <ellipse cx="50" cy="18" rx="10" ry="22" fill="currentColor" transform="rotate(0 50 50)" opacity="0.8"/>
+                                            <ellipse cx="50" cy="18" rx="10" ry="22" fill="currentColor" transform="rotate(60 50 50)" opacity="0.8"/>
+                                            <ellipse cx="50" cy="18" rx="10" ry="22" fill="currentColor" transform="rotate(120 50 50)" opacity="0.8"/>
+                                            <ellipse cx="50" cy="18" rx="10" ry="22" fill="currentColor" transform="rotate(180 50 50)" opacity="0.8"/>
+                                            <ellipse cx="50" cy="18" rx="10" ry="22" fill="currentColor" transform="rotate(240 50 50)" opacity="0.8"/>
+                                            <ellipse cx="50" cy="18" rx="10" ry="22" fill="currentColor" transform="rotate(300 50 50)" opacity="0.8"/>
+                                            <circle cx="50" cy="50" r="5" fill="#b8d4ff" opacity="0.5"/>
+                                        </svg>
+                                    </span>
+                                    <span class="line"></span>
+                                </div>
 
                                 <p class="orion-box">
                                     <span class="pw">&#x1F43E;</span>
@@ -635,6 +805,44 @@
                                     Gracias por existir de la forma en que lo haces — auténtica, hermosa, inolvidable.
                                 </p>
 
+                            </div>
+
+                            <div class="lily-divider" style="margin:24px 0 16px">
+                                <span class="line"></span>
+                                <span class="lily-icon white">
+                                    <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <ellipse cx="50" cy="18" rx="10" ry="22" fill="currentColor" transform="rotate(0 50 50)" opacity="0.8"/>
+                                        <ellipse cx="50" cy="18" rx="10" ry="22" fill="currentColor" transform="rotate(60 50 50)" opacity="0.8"/>
+                                        <ellipse cx="50" cy="18" rx="10" ry="22" fill="currentColor" transform="rotate(120 50 50)" opacity="0.8"/>
+                                        <ellipse cx="50" cy="18" rx="10" ry="22" fill="currentColor" transform="rotate(180 50 50)" opacity="0.8"/>
+                                        <ellipse cx="50" cy="18" rx="10" ry="22" fill="currentColor" transform="rotate(240 50 50)" opacity="0.8"/>
+                                        <ellipse cx="50" cy="18" rx="10" ry="22" fill="currentColor" transform="rotate(300 50 50)" opacity="0.8"/>
+                                        <circle cx="50" cy="50" r="5" fill="#b8d4ff" opacity="0.5"/>
+                                    </svg>
+                                </span>
+                                <span class="lily-icon blue">
+                                    <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <ellipse cx="50" cy="18" rx="10" ry="22" fill="currentColor" transform="rotate(0 50 50)" opacity="0.8"/>
+                                        <ellipse cx="50" cy="18" rx="10" ry="22" fill="currentColor" transform="rotate(60 50 50)" opacity="0.8"/>
+                                        <ellipse cx="50" cy="18" rx="10" ry="22" fill="currentColor" transform="rotate(120 50 50)" opacity="0.8"/>
+                                        <ellipse cx="50" cy="18" rx="10" ry="22" fill="currentColor" transform="rotate(180 50 50)" opacity="0.8"/>
+                                        <ellipse cx="50" cy="18" rx="10" ry="22" fill="currentColor" transform="rotate(240 50 50)" opacity="0.8"/>
+                                        <ellipse cx="50" cy="18" rx="10" ry="22" fill="currentColor" transform="rotate(300 50 50)" opacity="0.8"/>
+                                        <circle cx="50" cy="50" r="5" fill="white" opacity="0.4"/>
+                                    </svg>
+                                </span>
+                                <span class="lily-icon white">
+                                    <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <ellipse cx="50" cy="18" rx="10" ry="22" fill="currentColor" transform="rotate(0 50 50)" opacity="0.8"/>
+                                        <ellipse cx="50" cy="18" rx="10" ry="22" fill="currentColor" transform="rotate(60 50 50)" opacity="0.8"/>
+                                        <ellipse cx="50" cy="18" rx="10" ry="22" fill="currentColor" transform="rotate(120 50 50)" opacity="0.8"/>
+                                        <ellipse cx="50" cy="18" rx="10" ry="22" fill="currentColor" transform="rotate(180 50 50)" opacity="0.8"/>
+                                        <ellipse cx="50" cy="18" rx="10" ry="22" fill="currentColor" transform="rotate(240 50 50)" opacity="0.8"/>
+                                        <ellipse cx="50" cy="18" rx="10" ry="22" fill="currentColor" transform="rotate(300 50 50)" opacity="0.8"/>
+                                        <circle cx="50" cy="50" r="5" fill="#b8d4ff" opacity="0.5"/>
+                                    </svg>
+                                </span>
+                                <span class="line"></span>
                             </div>
 
                             <div class="letter-closing">
@@ -709,8 +917,9 @@
                 { h: '&#x1F43E;', c: 'rgba(180, 210, 240,' },
                 { h: '&#x2726;', c: 'rgba(130, 180, 240,' },
                 { h: '&#x2606;', c: 'rgba(200, 220, 255,' },
-                { h: '&#x269C;', c: 'rgba(255, 255, 255,' },
-                { h: '&#x269C;', c: 'rgba(100, 170, 255,' }
+                { h: '&#x1F338;', c: 'rgba(255, 200, 255,' },
+                { h: '&#x1F33A;', c: 'rgba(255, 220, 255,' },
+                { h: '&#x2740;', c: 'rgba(200, 230, 255,' }
             ];
             for (let i = 0; i < 35; i++) {
                 const el = document.createElement('div');
