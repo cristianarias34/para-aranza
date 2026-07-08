@@ -509,98 +509,127 @@
             50% { opacity: 0.5; transform: translateX(-50%) scale(1.02); }
         }
 
-        /* === SIDE LILIES - RISE FROM BOTTOM === */
-        .lily-side {
-            position: absolute;
-            bottom: 0;
-            width: 60px;
-            height: 100%;
+        /* === SCREEN LILIES - FRAME THE SCREEN === */
+        .screen-lily {
+            position: fixed;
             pointer-events: none;
-            z-index: 0;
-            overflow: visible;
+            z-index: 2;
+            opacity: 0;
+            transition: opacity 1.2s ease;
         }
-        .lily-side.left { left: -50px; }
-        .lily-side.right { right: -50px; }
+        .screen-lily.active {
+            opacity: 1;
+        }
 
-        .lily-side .stem-group {
+        /* Positions */
+        .screen-lily.l-top-l { top: 8px; left: 20px; }
+        .screen-lily.l-top-r { top: 8px; right: 20px; }
+        .screen-lily.l-left { top: 50%; left: 10px; transform: translateY(-50%); }
+        .screen-lily.l-right { top: 50%; right: 10px; transform: translateY(-50%); }
+        .screen-lily.l-bottom-l { bottom: 10px; left: 30px; }
+        .screen-lily.l-bottom-r { bottom: 10px; right: 30px; }
+
+        /* Stem */
+        .screen-lily .s-stem {
             position: absolute;
-            bottom: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 4px;
+            width: 3px;
             height: 0;
-            background: linear-gradient(to top, rgba(80, 160, 100, 0.25), transparent);
+            background: linear-gradient(to top, rgba(80, 160, 100, 0.2), transparent);
             border-radius: 2px;
-            transition: height 1.6s cubic-bezier(0.22, 1, 0.36, 1);
+            transition: height 1.4s cubic-bezier(0.22, 1, 0.36, 1);
         }
-        .lily-side.active .stem-group {
-            height: 70%;
-        }
+        .screen-lily.active .s-stem { height: 120px; }
+        .screen-lily.small.active .s-stem { height: 70px; }
 
-        .lily-side .lily-flower {
+        /* Vertical stems */
+        .screen-lily.l-left .s-stem { bottom: 0; left: 50%; transform: translateX(-50%); }
+        .screen-lily.l-right .s-stem { bottom: 0; left: 50%; transform: translateX(-50%); }
+        /* Top stems go downward */
+        .screen-lily.l-top-l .s-stem { top: 30px; left: 50%; transform: translateX(-50%); background: linear-gradient(to bottom, rgba(80, 160, 100, 0.2), transparent); }
+        .screen-lily.l-top-r .s-stem { top: 30px; left: 50%; transform: translateX(-50%); background: linear-gradient(to bottom, rgba(80, 160, 100, 0.2), transparent); }
+        /* Bottom stems go upward */
+        .screen-lily.l-bottom-l .s-stem { bottom: 30px; left: 50%; transform: translateX(-50%); }
+        .screen-lily.l-bottom-r .s-stem { bottom: 30px; left: 50%; transform: translateX(-50%); }
+
+        /* Flowers */
+        .screen-lily .s-flower {
             position: absolute;
-            width: 26px;
-            height: 26px;
+            width: 24px;
+            height: 24px;
             opacity: 0;
             transition: all 0.8s ease;
             left: 50%;
             transform: translateX(-50%) scale(0);
         }
-        .lily-side .lily-flower svg {
+        .screen-lily .s-flower svg {
             display: block;
             width: 100%;
             height: 100%;
-            filter: drop-shadow(0 0 6px currentColor);
+            filter: drop-shadow(0 0 8px currentColor);
         }
-        .lily-side .lily-flower.f1 { bottom: 55%; transition-delay: 0.6s; }
-        .lily-side .lily-flower.f2 { bottom: 30%; transition-delay: 0.9s; }
-        .lily-side .lily-flower.f3 { bottom: 8%; transition-delay: 1.2s; }
+        .screen-lily.small .s-flower { width: 18px; height: 18px; }
 
-        .lily-side.active .lily-flower {
+        /* Flower positions along stem */
+        /* Left/right - flowers going up */
+        .screen-lily.l-left .s-flower.f1 { bottom: 55%; transition-delay: 0.5s; }
+        .screen-lily.l-left .s-flower.f2 { bottom: 28%; transition-delay: 0.8s; }
+        .screen-lily.l-left .s-flower.f3 { bottom: 4%; transition-delay: 1.1s; }
+        .screen-lily.l-right .s-flower.f1 { bottom: 55%; transition-delay: 0.5s; }
+        .screen-lily.l-right .s-flower.f2 { bottom: 28%; transition-delay: 0.8s; }
+        .screen-lily.l-right .s-flower.f3 { bottom: 4%; transition-delay: 1.1s; }
+        /* Top - flowers going down */
+        .screen-lily.l-top-l .s-flower.f1 { top: 55%; transition-delay: 0.5s; }
+        .screen-lily.l-top-l .s-flower.f2 { top: 28%; transition-delay: 0.8s; }
+        .screen-lily.l-top-r .s-flower.f1 { top: 55%; transition-delay: 0.5s; }
+        .screen-lily.l-top-r .s-flower.f2 { top: 28%; transition-delay: 0.8s; }
+        /* Bottom - flowers going up */
+        .screen-lily.l-bottom-l .s-flower.f1 { bottom: 55%; transition-delay: 0.5s; }
+        .screen-lily.l-bottom-l .s-flower.f2 { bottom: 28%; transition-delay: 0.8s; }
+        .screen-lily.l-bottom-r .s-flower.f1 { bottom: 55%; transition-delay: 0.5s; }
+        .screen-lily.l-bottom-r .s-flower.f2 { bottom: 28%; transition-delay: 0.8s; }
+
+        .screen-lily.active .s-flower {
             opacity: 1;
             transform: translateX(-50%) scale(1);
         }
 
         /* Particles */
-        .lily-side .particle-zone {
+        .screen-lily .s-particles {
             position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            top: 0;
+            top: 0; left: 0; right: 0; bottom: 0;
             pointer-events: none;
             overflow: visible;
         }
-        .particle-dot {
+        .p-dot {
             position: absolute;
             border-radius: 50%;
             pointer-events: none;
             opacity: 0;
-            animation: particleRise linear forwards;
+            animation: pFloat linear forwards;
             box-shadow: 0 0 6px currentColor;
         }
-        @keyframes particleRise {
-            0%   { transform: translateY(0) scale(0.3); opacity: 0; }
-            10%  { opacity: 0.8; }
-            80%  { opacity: 0.5; }
-            100% { transform: translateY(-380px) scale(1); opacity: 0; }
+        @keyframes pFloat {
+            0%   { transform: translateY(0) scale(0.2); opacity: 0; }
+            10%  { opacity: 0.7; }
+            80%  { opacity: 0.4; }
+            100% { transform: translateY(-300px) scale(1.2); opacity: 0; }
+        }
+        .screen-lily.l-top-l .p-dot, .screen-lily.l-top-r .p-dot {
+            animation-name: pFloatDown;
+        }
+        @keyframes pFloatDown {
+            0%   { transform: translateY(0) scale(0.2); opacity: 0; }
+            10%  { opacity: 0.7; }
+            80%  { opacity: 0.4; }
+            100% { transform: translateY(300px) scale(1.2); opacity: 0; }
         }
 
-        /* Responsive side lilies */
-        @media (max-width: 800px) {
-            .lily-side { width: 40px; }
-            .lily-side.left { left: -32px; }
-            .lily-side.right { right: -32px; }
-            .lily-side .lily-flower { width: 20px; height: 20px; }
-        }
-        @media (max-width: 480px) {
-            .lily-side { width: 30px; }
-            .lily-side.left { left: -20px; }
-            .lily-side.right { right: -20px; }
-            .lily-side .lily-flower { width: 16px; height: 16px; }
-            .lily-side .lily-flower.f1 { bottom: 50%; }
-            .lily-side .lily-flower.f2 { bottom: 28%; }
-            .lily-side .lily-flower.f3 { bottom: 6%; }
+        /* Responsive */
+        @media (max-width: 700px) {
+            .screen-lily .s-flower { width: 18px; height: 18px; }
+            .screen-lily.small .s-flower { width: 14px; height: 14px; }
+            .screen-lily.active .s-stem { height: 80px; }
+            .screen-lily.small.active .s-stem { height: 50px; }
         }
 .letter-content-hidden .letter-body > *:not(#twP1):not(.typewriter-hidden),
 .letter-content-hidden .letter-closing,
@@ -632,80 +661,73 @@
     <div class="scene">
 
         <div class="envelope-wrapper" id="envelopeWrapper">
-            <!-- Side lilies -->
-            <div class="lily-side left" id="lilyLeft">
-                <div class="stem-group"></div>
-                <div class="lily-flower f1 blue">
-                    <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <ellipse cx="50" cy="18" rx="10" ry="22" fill="currentColor" transform="rotate(0 50 50)" opacity="0.8"/>
-                        <ellipse cx="50" cy="18" rx="10" ry="22" fill="currentColor" transform="rotate(60 50 50)" opacity="0.8"/>
-                        <ellipse cx="50" cy="18" rx="10" ry="22" fill="currentColor" transform="rotate(120 50 50)" opacity="0.8"/>
-                        <ellipse cx="50" cy="18" rx="10" ry="22" fill="currentColor" transform="rotate(180 50 50)" opacity="0.8"/>
-                        <ellipse cx="50" cy="18" rx="10" ry="22" fill="currentColor" transform="rotate(240 50 50)" opacity="0.8"/>
-                        <ellipse cx="50" cy="18" rx="10" ry="22" fill="currentColor" transform="rotate(300 50 50)" opacity="0.8"/>
-                        <circle cx="50" cy="50" r="5" fill="white" opacity="0.3"/>
-                    </svg>
+
+            <!-- Screen-frame lilies -->
+            <div class="screen-lily l-top-l" data-particle="down">
+                <div class="s-stem"></div>
+                <div class="s-flower f1 blue">
+                    <svg viewBox="0 0 100 100"><ellipse cx="50" cy="18" rx="10" ry="22" fill="currentColor" transform="rotate(0 50 50)" opacity="0.8"/><ellipse cx="50" cy="18" rx="10" ry="22" fill="currentColor" transform="rotate(60 50 50)" opacity="0.8"/><ellipse cx="50" cy="18" rx="10" ry="22" fill="currentColor" transform="rotate(120 50 50)" opacity="0.8"/><ellipse cx="50" cy="18" rx="10" ry="22" fill="currentColor" transform="rotate(180 50 50)" opacity="0.8"/><ellipse cx="50" cy="18" rx="10" ry="22" fill="currentColor" transform="rotate(240 50 50)" opacity="0.8"/><ellipse cx="50" cy="18" rx="10" ry="22" fill="currentColor" transform="rotate(300 50 50)" opacity="0.8"/><circle cx="50" cy="50" r="5" fill="white" opacity="0.3"/></svg>
                 </div>
-                <div class="lily-flower f2 white">
-                    <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <ellipse cx="50" cy="18" rx="10" ry="22" fill="currentColor" transform="rotate(0 50 50)" opacity="0.8"/>
-                        <ellipse cx="50" cy="18" rx="10" ry="22" fill="currentColor" transform="rotate(60 50 50)" opacity="0.8"/>
-                        <ellipse cx="50" cy="18" rx="10" ry="22" fill="currentColor" transform="rotate(120 50 50)" opacity="0.8"/>
-                        <ellipse cx="50" cy="18" rx="10" ry="22" fill="currentColor" transform="rotate(180 50 50)" opacity="0.8"/>
-                        <ellipse cx="50" cy="18" rx="10" ry="22" fill="currentColor" transform="rotate(240 50 50)" opacity="0.8"/>
-                        <ellipse cx="50" cy="18" rx="10" ry="22" fill="currentColor" transform="rotate(300 50 50)" opacity="0.8"/>
-                        <circle cx="50" cy="50" r="5" fill="#b8d4ff" opacity="0.3"/>
-                    </svg>
+                <div class="s-flower f2 white">
+                    <svg viewBox="0 0 100 100"><ellipse cx="50" cy="18" rx="10" ry="22" fill="currentColor" transform="rotate(0 50 50)" opacity="0.8"/><ellipse cx="50" cy="18" rx="10" ry="22" fill="currentColor" transform="rotate(60 50 50)" opacity="0.8"/><ellipse cx="50" cy="18" rx="10" ry="22" fill="currentColor" transform="rotate(120 50 50)" opacity="0.8"/><ellipse cx="50" cy="18" rx="10" ry="22" fill="currentColor" transform="rotate(180 50 50)" opacity="0.8"/><ellipse cx="50" cy="18" rx="10" ry="22" fill="currentColor" transform="rotate(240 50 50)" opacity="0.8"/><ellipse cx="50" cy="18" rx="10" ry="22" fill="currentColor" transform="rotate(300 50 50)" opacity="0.8"/><circle cx="50" cy="50" r="5" fill="#b8d4ff" opacity="0.3"/></svg>
                 </div>
-                <div class="lily-flower f3 blue">
-                    <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <ellipse cx="50" cy="18" rx="10" ry="22" fill="currentColor" transform="rotate(0 50 50)" opacity="0.8"/>
-                        <ellipse cx="50" cy="18" rx="10" ry="22" fill="currentColor" transform="rotate(60 50 50)" opacity="0.8"/>
-                        <ellipse cx="50" cy="18" rx="10" ry="22" fill="currentColor" transform="rotate(120 50 50)" opacity="0.8"/>
-                        <ellipse cx="50" cy="18" rx="10" ry="22" fill="currentColor" transform="rotate(180 50 50)" opacity="0.8"/>
-                        <ellipse cx="50" cy="18" rx="10" ry="22" fill="currentColor" transform="rotate(240 50 50)" opacity="0.8"/>
-                        <ellipse cx="50" cy="18" rx="10" ry="22" fill="currentColor" transform="rotate(300 50 50)" opacity="0.8"/>
-                        <circle cx="50" cy="50" r="5" fill="white" opacity="0.3"/>
-                    </svg>
-                </div>
-                <div class="particle-zone" id="particlesLeft"></div>
+                <div class="s-particles" data-zone="pTopL"></div>
             </div>
-            <div class="lily-side right" id="lilyRight">
-                <div class="stem-group"></div>
-                <div class="lily-flower f1 white">
-                    <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <ellipse cx="50" cy="18" rx="10" ry="22" fill="currentColor" transform="rotate(0 50 50)" opacity="0.8"/>
-                        <ellipse cx="50" cy="18" rx="10" ry="22" fill="currentColor" transform="rotate(60 50 50)" opacity="0.8"/>
-                        <ellipse cx="50" cy="18" rx="10" ry="22" fill="currentColor" transform="rotate(120 50 50)" opacity="0.8"/>
-                        <ellipse cx="50" cy="18" rx="10" ry="22" fill="currentColor" transform="rotate(180 50 50)" opacity="0.8"/>
-                        <ellipse cx="50" cy="18" rx="10" ry="22" fill="currentColor" transform="rotate(240 50 50)" opacity="0.8"/>
-                        <ellipse cx="50" cy="18" rx="10" ry="22" fill="currentColor" transform="rotate(300 50 50)" opacity="0.8"/>
-                        <circle cx="50" cy="50" r="5" fill="#b8d4ff" opacity="0.3"/>
-                    </svg>
+            <div class="screen-lily l-top-r" data-particle="down">
+                <div class="s-stem"></div>
+                <div class="s-flower f1 white">
+                    <svg viewBox="0 0 100 100"><ellipse cx="50" cy="18" rx="10" ry="22" fill="currentColor" transform="rotate(0 50 50)" opacity="0.8"/><ellipse cx="50" cy="18" rx="10" ry="22" fill="currentColor" transform="rotate(60 50 50)" opacity="0.8"/><ellipse cx="50" cy="18" rx="10" ry="22" fill="currentColor" transform="rotate(120 50 50)" opacity="0.8"/><ellipse cx="50" cy="18" rx="10" ry="22" fill="currentColor" transform="rotate(180 50 50)" opacity="0.8"/><ellipse cx="50" cy="18" rx="10" ry="22" fill="currentColor" transform="rotate(240 50 50)" opacity="0.8"/><ellipse cx="50" cy="18" rx="10" ry="22" fill="currentColor" transform="rotate(300 50 50)" opacity="0.8"/><circle cx="50" cy="50" r="5" fill="#b8d4ff" opacity="0.3"/></svg>
                 </div>
-                <div class="lily-flower f2 blue">
-                    <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <ellipse cx="50" cy="18" rx="10" ry="22" fill="currentColor" transform="rotate(0 50 50)" opacity="0.8"/>
-                        <ellipse cx="50" cy="18" rx="10" ry="22" fill="currentColor" transform="rotate(60 50 50)" opacity="0.8"/>
-                        <ellipse cx="50" cy="18" rx="10" ry="22" fill="currentColor" transform="rotate(120 50 50)" opacity="0.8"/>
-                        <ellipse cx="50" cy="18" rx="10" ry="22" fill="currentColor" transform="rotate(180 50 50)" opacity="0.8"/>
-                        <ellipse cx="50" cy="18" rx="10" ry="22" fill="currentColor" transform="rotate(240 50 50)" opacity="0.8"/>
-                        <ellipse cx="50" cy="18" rx="10" ry="22" fill="currentColor" transform="rotate(300 50 50)" opacity="0.8"/>
-                        <circle cx="50" cy="50" r="5" fill="white" opacity="0.3"/>
-                    </svg>
+                <div class="s-flower f2 blue">
+                    <svg viewBox="0 0 100 100"><ellipse cx="50" cy="18" rx="10" ry="22" fill="currentColor" transform="rotate(0 50 50)" opacity="0.8"/><ellipse cx="50" cy="18" rx="10" ry="22" fill="currentColor" transform="rotate(60 50 50)" opacity="0.8"/><ellipse cx="50" cy="18" rx="10" ry="22" fill="currentColor" transform="rotate(120 50 50)" opacity="0.8"/><ellipse cx="50" cy="18" rx="10" ry="22" fill="currentColor" transform="rotate(180 50 50)" opacity="0.8"/><ellipse cx="50" cy="18" rx="10" ry="22" fill="currentColor" transform="rotate(240 50 50)" opacity="0.8"/><ellipse cx="50" cy="18" rx="10" ry="22" fill="currentColor" transform="rotate(300 50 50)" opacity="0.8"/><circle cx="50" cy="50" r="5" fill="white" opacity="0.3"/></svg>
                 </div>
-                <div class="lily-flower f3 white">
-                    <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <ellipse cx="50" cy="18" rx="10" ry="22" fill="currentColor" transform="rotate(0 50 50)" opacity="0.8"/>
-                        <ellipse cx="50" cy="18" rx="10" ry="22" fill="currentColor" transform="rotate(60 50 50)" opacity="0.8"/>
-                        <ellipse cx="50" cy="18" rx="10" ry="22" fill="currentColor" transform="rotate(120 50 50)" opacity="0.8"/>
-                        <ellipse cx="50" cy="18" rx="10" ry="22" fill="currentColor" transform="rotate(180 50 50)" opacity="0.8"/>
-                        <ellipse cx="50" cy="18" rx="10" ry="22" fill="currentColor" transform="rotate(240 50 50)" opacity="0.8"/>
-                        <ellipse cx="50" cy="18" rx="10" ry="22" fill="currentColor" transform="rotate(300 50 50)" opacity="0.8"/>
-                        <circle cx="50" cy="50" r="5" fill="#b8d4ff" opacity="0.3"/>
-                    </svg>
+                <div class="s-particles" data-zone="pTopR"></div>
+            </div>
+            <div class="screen-lily l-left">
+                <div class="s-stem"></div>
+                <div class="s-flower f1 blue">
+                    <svg viewBox="0 0 100 100"><ellipse cx="50" cy="18" rx="10" ry="22" fill="currentColor" transform="rotate(0 50 50)" opacity="0.8"/><ellipse cx="50" cy="18" rx="10" ry="22" fill="currentColor" transform="rotate(60 50 50)" opacity="0.8"/><ellipse cx="50" cy="18" rx="10" ry="22" fill="currentColor" transform="rotate(120 50 50)" opacity="0.8"/><ellipse cx="50" cy="18" rx="10" ry="22" fill="currentColor" transform="rotate(180 50 50)" opacity="0.8"/><ellipse cx="50" cy="18" rx="10" ry="22" fill="currentColor" transform="rotate(240 50 50)" opacity="0.8"/><ellipse cx="50" cy="18" rx="10" ry="22" fill="currentColor" transform="rotate(300 50 50)" opacity="0.8"/><circle cx="50" cy="50" r="5" fill="white" opacity="0.3"/></svg>
                 </div>
-                <div class="particle-zone" id="particlesRight"></div>
+                <div class="s-flower f2 white">
+                    <svg viewBox="0 0 100 100"><ellipse cx="50" cy="18" rx="10" ry="22" fill="currentColor" transform="rotate(0 50 50)" opacity="0.8"/><ellipse cx="50" cy="18" rx="10" ry="22" fill="currentColor" transform="rotate(60 50 50)" opacity="0.8"/><ellipse cx="50" cy="18" rx="10" ry="22" fill="currentColor" transform="rotate(120 50 50)" opacity="0.8"/><ellipse cx="50" cy="18" rx="10" ry="22" fill="currentColor" transform="rotate(180 50 50)" opacity="0.8"/><ellipse cx="50" cy="18" rx="10" ry="22" fill="currentColor" transform="rotate(240 50 50)" opacity="0.8"/><ellipse cx="50" cy="18" rx="10" ry="22" fill="currentColor" transform="rotate(300 50 50)" opacity="0.8"/><circle cx="50" cy="50" r="5" fill="#b8d4ff" opacity="0.3"/></svg>
+                </div>
+                <div class="s-flower f3 blue">
+                    <svg viewBox="0 0 100 100"><ellipse cx="50" cy="18" rx="10" ry="22" fill="currentColor" transform="rotate(0 50 50)" opacity="0.8"/><ellipse cx="50" cy="18" rx="10" ry="22" fill="currentColor" transform="rotate(60 50 50)" opacity="0.8"/><ellipse cx="50" cy="18" rx="10" ry="22" fill="currentColor" transform="rotate(120 50 50)" opacity="0.8"/><ellipse cx="50" cy="18" rx="10" ry="22" fill="currentColor" transform="rotate(180 50 50)" opacity="0.8"/><ellipse cx="50" cy="18" rx="10" ry="22" fill="currentColor" transform="rotate(240 50 50)" opacity="0.8"/><ellipse cx="50" cy="18" rx="10" ry="22" fill="currentColor" transform="rotate(300 50 50)" opacity="0.8"/><circle cx="50" cy="50" r="5" fill="white" opacity="0.3"/></svg>
+                </div>
+                <div class="s-particles" data-zone="pLeft"></div>
+            </div>
+            <div class="screen-lily l-right">
+                <div class="s-stem"></div>
+                <div class="s-flower f1 white">
+                    <svg viewBox="0 0 100 100"><ellipse cx="50" cy="18" rx="10" ry="22" fill="currentColor" transform="rotate(0 50 50)" opacity="0.8"/><ellipse cx="50" cy="18" rx="10" ry="22" fill="currentColor" transform="rotate(60 50 50)" opacity="0.8"/><ellipse cx="50" cy="18" rx="10" ry="22" fill="currentColor" transform="rotate(120 50 50)" opacity="0.8"/><ellipse cx="50" cy="18" rx="10" ry="22" fill="currentColor" transform="rotate(180 50 50)" opacity="0.8"/><ellipse cx="50" cy="18" rx="10" ry="22" fill="currentColor" transform="rotate(240 50 50)" opacity="0.8"/><ellipse cx="50" cy="18" rx="10" ry="22" fill="currentColor" transform="rotate(300 50 50)" opacity="0.8"/><circle cx="50" cy="50" r="5" fill="#b8d4ff" opacity="0.3"/></svg>
+                </div>
+                <div class="s-flower f2 blue">
+                    <svg viewBox="0 0 100 100"><ellipse cx="50" cy="18" rx="10" ry="22" fill="currentColor" transform="rotate(0 50 50)" opacity="0.8"/><ellipse cx="50" cy="18" rx="10" ry="22" fill="currentColor" transform="rotate(60 50 50)" opacity="0.8"/><ellipse cx="50" cy="18" rx="10" ry="22" fill="currentColor" transform="rotate(120 50 50)" opacity="0.8"/><ellipse cx="50" cy="18" rx="10" ry="22" fill="currentColor" transform="rotate(180 50 50)" opacity="0.8"/><ellipse cx="50" cy="18" rx="10" ry="22" fill="currentColor" transform="rotate(240 50 50)" opacity="0.8"/><ellipse cx="50" cy="18" rx="10" ry="22" fill="currentColor" transform="rotate(300 50 50)" opacity="0.8"/><circle cx="50" cy="50" r="5" fill="white" opacity="0.3"/></svg>
+                </div>
+                <div class="s-flower f3 white">
+                    <svg viewBox="0 0 100 100"><ellipse cx="50" cy="18" rx="10" ry="22" fill="currentColor" transform="rotate(0 50 50)" opacity="0.8"/><ellipse cx="50" cy="18" rx="10" ry="22" fill="currentColor" transform="rotate(60 50 50)" opacity="0.8"/><ellipse cx="50" cy="18" rx="10" ry="22" fill="currentColor" transform="rotate(120 50 50)" opacity="0.8"/><ellipse cx="50" cy="18" rx="10" ry="22" fill="currentColor" transform="rotate(180 50 50)" opacity="0.8"/><ellipse cx="50" cy="18" rx="10" ry="22" fill="currentColor" transform="rotate(240 50 50)" opacity="0.8"/><ellipse cx="50" cy="18" rx="10" ry="22" fill="currentColor" transform="rotate(300 50 50)" opacity="0.8"/><circle cx="50" cy="50" r="5" fill="#b8d4ff" opacity="0.3"/></svg>
+                </div>
+                <div class="s-particles" data-zone="pRight"></div>
+            </div>
+            <div class="screen-lily l-bottom-l small">
+                <div class="s-stem"></div>
+                <div class="s-flower f1 blue">
+                    <svg viewBox="0 0 100 100"><ellipse cx="50" cy="18" rx="10" ry="22" fill="currentColor" transform="rotate(0 50 50)" opacity="0.8"/><ellipse cx="50" cy="18" rx="10" ry="22" fill="currentColor" transform="rotate(60 50 50)" opacity="0.8"/><ellipse cx="50" cy="18" rx="10" ry="22" fill="currentColor" transform="rotate(120 50 50)" opacity="0.8"/><ellipse cx="50" cy="18" rx="10" ry="22" fill="currentColor" transform="rotate(180 50 50)" opacity="0.8"/><ellipse cx="50" cy="18" rx="10" ry="22" fill="currentColor" transform="rotate(240 50 50)" opacity="0.8"/><ellipse cx="50" cy="18" rx="10" ry="22" fill="currentColor" transform="rotate(300 50 50)" opacity="0.8"/><circle cx="50" cy="50" r="5" fill="white" opacity="0.3"/></svg>
+                </div>
+                <div class="s-flower f2 white">
+                    <svg viewBox="0 0 100 100"><ellipse cx="50" cy="18" rx="10" ry="22" fill="currentColor" transform="rotate(0 50 50)" opacity="0.8"/><ellipse cx="50" cy="18" rx="10" ry="22" fill="currentColor" transform="rotate(60 50 50)" opacity="0.8"/><ellipse cx="50" cy="18" rx="10" ry="22" fill="currentColor" transform="rotate(120 50 50)" opacity="0.8"/><ellipse cx="50" cy="18" rx="10" ry="22" fill="currentColor" transform="rotate(180 50 50)" opacity="0.8"/><ellipse cx="50" cy="18" rx="10" ry="22" fill="currentColor" transform="rotate(240 50 50)" opacity="0.8"/><ellipse cx="50" cy="18" rx="10" ry="22" fill="currentColor" transform="rotate(300 50 50)" opacity="0.8"/><circle cx="50" cy="50" r="5" fill="#b8d4ff" opacity="0.3"/></svg>
+                </div>
+                <div class="s-particles" data-zone="pBottomL"></div>
+            </div>
+            <div class="screen-lily l-bottom-r small">
+                <div class="s-stem"></div>
+                <div class="s-flower f1 white">
+                    <svg viewBox="0 0 100 100"><ellipse cx="50" cy="18" rx="10" ry="22" fill="currentColor" transform="rotate(0 50 50)" opacity="0.8"/><ellipse cx="50" cy="18" rx="10" ry="22" fill="currentColor" transform="rotate(60 50 50)" opacity="0.8"/><ellipse cx="50" cy="18" rx="10" ry="22" fill="currentColor" transform="rotate(120 50 50)" opacity="0.8"/><ellipse cx="50" cy="18" rx="10" ry="22" fill="currentColor" transform="rotate(180 50 50)" opacity="0.8"/><ellipse cx="50" cy="18" rx="10" ry="22" fill="currentColor" transform="rotate(240 50 50)" opacity="0.8"/><ellipse cx="50" cy="18" rx="10" ry="22" fill="currentColor" transform="rotate(300 50 50)" opacity="0.8"/><circle cx="50" cy="50" r="5" fill="#b8d4ff" opacity="0.3"/></svg>
+                </div>
+                <div class="s-flower f2 blue">
+                    <svg viewBox="0 0 100 100"><ellipse cx="50" cy="18" rx="10" ry="22" fill="currentColor" transform="rotate(0 50 50)" opacity="0.8"/><ellipse cx="50" cy="18" rx="10" ry="22" fill="currentColor" transform="rotate(60 50 50)" opacity="0.8"/><ellipse cx="50" cy="18" rx="10" ry="22" fill="currentColor" transform="rotate(120 50 50)" opacity="0.8"/><ellipse cx="50" cy="18" rx="10" ry="22" fill="currentColor" transform="rotate(180 50 50)" opacity="0.8"/><ellipse cx="50" cy="18" rx="10" ry="22" fill="currentColor" transform="rotate(240 50 50)" opacity="0.8"/><ellipse cx="50" cy="18" rx="10" ry="22" fill="currentColor" transform="rotate(300 50 50)" opacity="0.8"/><circle cx="50" cy="50" r="5" fill="white" opacity="0.3"/></svg>
+                </div>
+                <div class="s-particles" data-zone="pBottomR"></div>
             </div>
             <div class="envelope" id="envelope">
 
@@ -1211,27 +1233,26 @@
             seal.classList.add('open');
             hint.classList.add('hidden');
 
-            // ===== SIDE LILIES ACTIVATION =====
-            const lilyLeft = document.getElementById('lilyLeft');
-            const lilyRight = document.getElementById('lilyRight');
-            lilyLeft.classList.add('active');
-            lilyRight.classList.add('active');
+            // ===== SCREEN LILIES ACTIVATION =====
+            document.querySelectorAll('.screen-lily').forEach(el => el.classList.add('active'));
 
-            function spawnParticles(zoneId, color1, color2, count) {
-                const zone = document.getElementById(zoneId);
+            function spawnParticles(zoneSel, color1, color2, count) {
+                const zone = document.querySelector(zoneSel);
+                if (!zone) return;
                 for (let i = 0; i < count; i++) {
                     const dot = document.createElement('div');
-                    dot.className = 'particle-dot';
-                    const size = 3 + Math.random() * 7;
+                    dot.className = 'p-dot';
+                    const size = 2 + Math.random() * 5;
                     const isBlue = Math.random() > 0.5;
+                    const parent = zone.closest('.screen-lily');
+                    const isTop = parent && (parent.classList.contains('l-top-l') || parent.classList.contains('l-top-r'));
                     dot.style.cssText = `
                         left: ${10 + Math.random() * 80}%;
-                        bottom: ${Math.random() * 50}%;
+                        bottom: ${isTop ? (5 + Math.random() * 40) + '%' : (20 + Math.random() * 60) + '%'};
                         width: ${size}px;
                         height: ${size}px;
                         background: ${isBlue ? color1 : color2};
-                        color: ${isBlue ? color1 : color2};
-                        box-shadow: 0 0 ${6 + Math.random() * 10}px ${color1}, 0 0 ${3 + Math.random() * 6}px ${color2};
+                        box-shadow: 0 0 ${4 + Math.random() * 8}px ${color1}, 0 0 ${2 + Math.random() * 4}px ${color2};
                         animation-duration: ${2 + Math.random() * 3}s;
                         animation-delay: ${Math.random() * 1.5}s;
                     `;
@@ -1239,18 +1260,23 @@
                     setTimeout(() => dot.remove(), 5000);
                 }
             }
-            // Continuous particle spawning
-            function spawnLoop(zoneId, c1, c2) {
+            function spawnLoop(zoneSel, c1, c2) {
                 let running = true;
                 (function loop() {
                     if (!running) return;
-                    spawnParticles(zoneId, c1, c2, 3 + Math.floor(Math.random() * 4));
+                    spawnParticles(zoneSel, c1, c2, 2 + Math.floor(Math.random() * 3));
                     setTimeout(loop, 400 + Math.random() * 600);
                 })();
                 return () => running = false;
             }
-            const stopLeft = spawnLoop('particlesLeft', 'rgba(100, 170, 255, 0.7)', 'rgba(255, 255, 255, 0.5)');
-            const stopRight = spawnLoop('particlesRight', 'rgba(255, 255, 255, 0.6)', 'rgba(100, 170, 255, 0.5)');
+            const stops = [
+                spawnLoop('[data-zone="pTopL"]', 'rgba(100, 170, 255, 0.6)', 'rgba(255, 255, 255, 0.4)'),
+                spawnLoop('[data-zone="pTopR"]', 'rgba(255, 255, 255, 0.5)', 'rgba(100, 170, 255, 0.4)'),
+                spawnLoop('[data-zone="pLeft"]', 'rgba(100, 170, 255, 0.6)', 'rgba(255, 255, 255, 0.4)'),
+                spawnLoop('[data-zone="pRight"]', 'rgba(255, 255, 255, 0.5)', 'rgba(100, 170, 255, 0.4)'),
+                spawnLoop('[data-zone="pBottomL"]', 'rgba(100, 170, 255, 0.5)', 'rgba(255, 255, 255, 0.4)'),
+                spawnLoop('[data-zone="pBottomR"]', 'rgba(255, 255, 255, 0.4)', 'rgba(100, 170, 255, 0.5)')
+            ];
 
             // Confetti burst from center
             createBurst(window.innerWidth / 2, window.innerHeight / 2 - 60);
