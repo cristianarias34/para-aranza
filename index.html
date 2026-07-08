@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Para Aranza 💙</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Dancing+Script:wght@400;700&family=Cormorant+Garamont:ital,wght@0,300;0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(145deg, #020408 0%, #070f1f 30%, #0a0a0a 55%, #05050c 80%, #000000 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Cormorant Garamond', serif;
+            overflow-x: hidden;
+            padding: 20px;
+        }
+
+        /* === STARS === */
+        #stars-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* === FLOATING ORBS === */
+        .float-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+        .float-item {
+            position: absolute;
+            bottom: -40px;
+            animation: floatUp linear infinite;
+            opacity: 0;
+        }
+        @keyframes floatUp {
+            0%   { transform: translateY(0) rotate(0deg) scale(0.3); opacity: 0; }
+            10%  { opacity: 0.2; }
+            85%  { opacity: 0.2; }
+            100% { transform: translateY(-120vh) rotate(800deg) scale(1); opacity: 0; }
+        }
+
+        /* === MAIN WRAPPER === */
+        .scene {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            max-width: 780px;
+            perspective: 2000px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* === ENVELOPE === */
+        .envelope-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 680px;
+            margin: 0 auto;
+            transform-style: preserve-3d;
+            transition: transform 0.3s;
+        }
+
+        .envelope {
+            position: relative;
+            width: 100%;
+            background: linear-gradient(160deg, #0f1a30 0%, #080d1a 40%, #050810 100%);
+            border-radius: 12px;
+            padding: 6px;
+            box-shadow:
+                0 20px 80px rgba(0,0,0,0.8),
+                0 0 40px rgba(40, 100, 200, 0.08),
+                inset 0 1px 0 rgba(100, 160, 255, 0.06);
+            cursor: pointer;
+            transition: box-shadow 0.6s;
+        }
+        .envelope:hover {
+            box-shadow:
+                0 25px 90px rgba(0,0,0,0.85),
+                0 0 60px rgba(40, 100, 200, 0.12);
+        }
+
+        .envelope-body {
+            position: relative;
+            background: linear-gradient(160deg, #060b15, #020408);
+            border-radius: 10px;
+            min-height: 420px;
+            border: 1px solid rgba(80, 140, 220, 0.07);
+            overflow: hidden;
+        }
+
+        /* Envelope flap (folded triangle at top) */
+        .envelope-flap {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 50%;
+            background: linear-gradient(170deg, #0f1a30 0%, #0a1225 50%, #060b15 100%);
+            clip-path: polygon(0 0, 100% 0, 100% 60%, 50% 100%, 0 60%);
+            transform-origin: top center;
+            transition: transform 0.9s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            z-index: 15;
+            border-bottom: 1px solid rgba(80, 140, 220, 0.06);
+        }
+        .envelope-flap.open {
+            transform: rotateX(180deg);
+            z-index: 1;
+        }
+
+        /* Wax seal on flap */
+        .seal {
+            position: absolute;
+            top: 38%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 76px;
+            height: 76px;
+            background: radial-gradient(circle at 35% 30%, #2a4a7a, #0f1a30 60%, #060b15);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+            color: #7ab0ff;
+            box-shadow:
+                0 0 30px rgba(40, 100, 220, 0.15),
+                inset 0 -4px 12px rgba(0,0,0,0.5),
+                inset 0 2px 6px rgba(100, 180, 255, 0.1);
+            border: 1.5px solid rgba(100, 170, 255, 0.12);
+            z-index: 20;
+            transition: all 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            user-select: none;
+        }
+        .seal.open {
+            transform: translate(-50%, -50%) scale(0) rotate(180deg);
+            opacity: 0;
+        }
+
+        /* === LETTER (slides out of envelope) === */
+        .letter-wrapper {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 5;
+            pointer-events: none;
+        }
+
+        .letter {
+            position: relative;
+            width: 92%;
+            max-height: 88%;
+            background: linear-gradient(165deg, #0b0f18, #060a12);
+            border-radius: 8px;
+            padding: 32px 30px 28px;
+            border: 1px solid rgba(80, 140, 220, 0.08);
+            box-shadow: 0 8px 40px rgba(0,0,0,0.6);
+            overflow-y: auto;
+            transform: translateY(20px) scale(0.95);
+            opacity: 0;
+            transition: all 0.9s cubic-bezier(0.34, 1.56, 0.64, 1);
+            pointer-events: none;
+            scrollbar-width: thin;
+            scrollbar-color: rgba(80, 140, 220, 0.15) transparent;
+        }
+        .letter::-webkit-scrollbar { width: 4px; }
+        .letter::-webkit-scrollbar-thumb { background: rgba(80, 140, 220, 0.2); border-radius: 4px; }
+
+        .letter.visible {
+            transform: translateY(0) scale(1);
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        /* Decorative corners on the letter */
+        .letter::before, .letter::after {
+            content: '';
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            pointer-events: none;
+            opacity: 0.12;
+        }
+        .letter::before {
+            top: 8px; left: 8px;
+            border-top: 1px solid rgba(100, 170, 255, 0.3);
+            border-left: 1px solid rgba(100, 170, 255, 0.3);
+        }
+        .letter::after {
+            bottom: 8px; right: 8px;
+            border-bottom: 1px solid rgba(100, 170, 255, 0.3);
+            border-right: 1px solid rgba(100, 170, 255, 0.3);
+        }
+
+        /* Orion watermark inside letter */
+        .letter-watermark {
+            position: absolute;
+            bottom: 5px;
+            right: 15px;
+            font-size: 100px;
+            opacity: 0.025;
+            color: #6a8fc0;
+            transform: rotate(-8deg);
+            pointer-events: none;
+            user-select: none;
+            line-height: 1;
+        }
+
+        /* === LETTER CONTENT === */
+        .letter-date {
+            text-align: right;
+            color: rgba(120, 175, 240, 0.25);
+            font-style: italic;
+            font-size: 14px;
+            margin-bottom: 16px;
+            font-family: 'Dancing Script', cursive;
+        }
+
+        .letter-greeting {
+            font-family: 'Dancing Script', cursive;
+            font-size: 34px;
+            color: #a8c8ff;
+            margin-bottom: 18px;
+            text-align: center;
+            text-shadow: 0 0 30px rgba(80, 160, 255, 0.1);
+            font-weight: 400;
+            letter-spacing: 1px;
+        }
+
+        .letter-body {
+            color: rgba(190, 215, 245, 0.85);
+            font-size: 17.5px;
+            line-height: 1.95;
+            font-weight: 300;
+            text-align: justify;
+            letter-spacing: 0.15px;
+            position: relative;
+            z-index: 1;
+        }
+        .letter-body p {
+            margin-bottom: 16px;
+            text-indent: 28px;
+        }
+
+        .letter-body .hl {
+            color: #85b8ff;
+            font-weight: 600;
+        }
+        .letter-body .hlw {
+            color: #e8e0d0;
+            font-weight: 500;
+        }
+        .letter-body .it {
+            font-style: italic;
+            color: rgba(165, 200, 240, 0.7);
+        }
+
+        .letter-body .verse-box {
+            text-align: center;
+            text-indent: 0;
+            font-style: italic;
+            color: rgba(160, 200, 245, 0.5);
+            padding: 12px 0 8px;
+            font-size: 16.5px;
+            line-height: 1.8;
+            border-top: 1px solid rgba(80, 140, 220, 0.06);
+            border-bottom: 1px solid rgba(80, 140, 220, 0.06);
+            margin: 18px 0;
+        }
+        .letter-body .verse-box .em {
+            color: rgba(180, 215, 255, 0.8);
+        }
+
+        .letter-body .orion-box {
+            background: rgba(40, 100, 200, 0.04);
+            border-left: 2px solid rgba(80, 140, 220, 0.12);
+            padding: 10px 18px;
+            margin: 16px 0;
+            border-radius: 0 6px 6px 0;
+            text-indent: 0;
+            font-style: italic;
+        }
+        .letter-body .orion-box .pw {
+            display: inline-block;
+            margin-right: 4px;
+            opacity: 0.35;
+        }
+
+        .letter-body .poem-line {
+            display: block;
+            text-indent: 0;
+            text-align: center;
+            font-style: italic;
+            color: rgba(160, 200, 240, 0.45);
+            font-size: 15px;
+            line-height: 1.7;
+        }
+
+        .divider {
+            text-align: center;
+            margin: 18px 0;
+            color: rgba(80, 140, 220, 0.1);
+            font-size: 16px;
+            letter-spacing: 5px;
+            line-height: 1;
+        }
+        .divider .pd {
+            display: inline-block;
+            margin: 0 3px;
+            opacity: 0.4;
+        }
+
+        .letter-closing {
+            text-align: right;
+            margin-top: 24px;
+            font-family: 'Dancing Script', cursive;
+            font-size: 25px;
+            color: #a8c8ff;
+            line-height: 1.7;
+            position: relative;
+            z-index: 1;
+        }
+        .letter-closing .name {
+            font-size: 34px;
+            display: block;
+            margin-top: 2px;
+            color: #b8d0ff;
+            text-shadow: 0 0 20px rgba(80, 160, 255, 0.08);
+        }
+        .letter-closing .small {
+            font-size: 14px;
+            font-family: 'Cormorant Garamond', serif;
+            color: rgba(120, 175, 240, 0.35);
+            font-style: italic;
+        }
+        .letter-closing .psign {
+            display: inline-block;
+            font-size: 18px;
+            opacity: 0.25;
+            margin-left: 4px;
+            vertical-align: middle;
+        }
+
+        .completion-tag {
+            font-family: 'Dancing Script', cursive;
+            font-size: 12px;
+            color: rgba(120, 175, 240, 0.15);
+            text-align: center;
+            margin-top: 18px;
+            font-style: italic;
+            letter-spacing: 2px;
+        }
+
+        /* === CLICK HINT === */
+        .click-hint {
+            position: absolute;
+            bottom: 18px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: rgba(120, 175, 240, 0.2);
+            font-size: 13px;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            animation: pulse-hint 2.8s ease-in-out infinite;
+            z-index: 25;
+            white-space: nowrap;
+            font-family: 'Cormorant Garamond', serif;
+            transition: opacity 0.6s;
+        }
+        .click-hint.hidden { opacity: 0; }
+
+        @keyframes pulse-hint {
+            0%, 100% { opacity: 0.15; transform: translateX(-50%) scale(1); }
+            50% { opacity: 0.5; transform: translateX(-50%) scale(1.02); }
+        }
+
+        /* === RESPONSIVE === */
+        @media (max-width: 600px) {
+            .envelope-body { min-height: 340px; }
+            .letter { padding: 22px 18px 20px; }
+            .letter-body { font-size: 15.5px; }
+            .letter-greeting { font-size: 28px; }
+            .letter-closing { font-size: 22px; }
+            .letter-closing .name { font-size: 28px; }
+            .seal { width: 60px; height: 60px; font-size: 24px; top: 36%; }
+            .letter-watermark { font-size: 70px; bottom: 0; right: 5px; }
+            .letter::before, .letter::after { width: 28px; height: 28px; }
+            .letter-body .verse-box { font-size: 14px; }
+            .letter-body .poem-line { font-size: 13.5px; }
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="stars-canvas"></canvas>
+
+    <div class="float-container" id="floatContainer"></div>
+
+    <div class="scene">
+
+        <div class="envelope-wrapper">
+            <div class="envelope" id="envelope">
+
+                <div class="envelope-body">
+
+                    <!-- Flap -->
+                    <div class="envelope-flap" id="envelopeFlap">
+                        <div class="seal" id="seal">&#x2764;</div>
+                    </div>
+
+                    <!-- Letter -->
+                    <div class="letter-wrapper">
+                        <div class="letter" id="letter">
+
+                            <div class="letter-watermark">&#x1F436;</div>
+
+                            <div class="letter-date">Bajo un cielo infinito de estrellas...</div>
+
+                            <div class="letter-greeting">Querida Aranza,</div>
+
+                            <div class="letter-body">
+
+                                <p>
+                                    Hola, Aranza. Sé que el tiempo no ha sido largo — apenas unas cuantas vueltas del reloj,
+                                    algunos atardeceres compartidos a través de la luz de una pantalla. Pero hay cosas que el tiempo no mide,
+                                    y lo que siento cuando hablo contigo no entiende de días ni de meses.
+                                </p>
+
+                                <p>
+                                    Eres, sin ninguna duda, una de las personas más <span class="hl">maravillosas y encantadoras</span>
+                                    que he conocido. Y no es un cumplido vacío — es una certeza que crece cada vez que veo cómo eres,
+                                    cómo piensas, cómo sientes. Hay en ti una luz que no necesita presentación,
+                                    una mezcla de <span class="hlw">dulzura, profundidad y autenticidad</span>
+                                    que no pasa desapercibida para quien sabe mirar con el corazón.
+                                </p>
+
+                                <p>
+                                    Y quiero que sepas algo muy cierto: no me cautivó tu apariencia — aunque sería mentira decir que no es hermosa —
+                                    me cautivó <span class="hl">tu alma</span>. La forma en la que ves el mundo,
+                                    la manera en que tratas a los que amas, la calidez con la que hablas de las cosas que te importan.
+                                    Me enamoré de tu esencia antes de darme cuenta de que estaba cayendo.
+                                </p>
+
+                                <p>
+                                    Hablar contigo me regala una <span class="it">paz y una tranquilidad</span>
+                                    que nunca supe que necesitaba. Es como si el ruido del mundo se apagara por un momento
+                                    y solo existieras tú, tus palabras, tu risa, tu forma de ser.
+                                    Y en esos momentos pienso: <span class="it">¿cómo es posible que exista alguien así?</span>
+                                </p>
+
+                                <p>
+                                    Y algo que llevo grabado — <span class="hl">gracias</span>.
+                                    Muchas, muchísimas gracias por tenerme tanta confianza.
+                                    Por contarme todo lo que me has contado. Por abrirme las puertas de tu mundo,
+                                    de tus pensamientos, de tus historias, de tus silencios. Eso no se hace con cualquiera,
+                                    y el hecho de que hayas confiado en mí de esa forma es algo que guardo
+                                    con un respeto y un agradecimiento inmensos. No sabes lo grande que es
+                                    para mí que hayas compartido tu corazón conmigo.
+                                </p>
+
+                                <p>
+                    Tenemos tantos gustos en común que a veces pienso que el universo nos puso en el mismo camino
+                    a propósito. Cada coincidencia, cada conversación que se hace eterna, cada tema del que podríamos hablar
+                    durante horas sin cansarnos — todo me hace sonreír y pensar que hay algo especial aquí,
+                    algo que vale la pena cuidar con delicadeza.
+                                </p>
+
+                                <div class="divider">&#x2726; <span class="pd">&#x2014;</span> &#x2726; <span class="pd">&#x2014;</span> &#x2726;</div>
+
+                                <p class="orion-box">
+                                    <span class="pw">&#x1F43E;</span>
+                                    Y hablando de las cosas que hacen que tu corazón sea tan enorme...
+                                    sé que hay un ser de cuatro patas que tiene un pedazo importante de él.
+                                    <span class="hl">Orion</span>. Tu compañero fiel, tu american bully de mirada noble.
+                                    No hace falta haberlo conocido para saber que es tan especial como tú,
+                                    porque los perros siempre reflejan el amor que reciben, y estoy seguro
+                                    de que Orion es un reflejo hermoso del corazón gigante que tienes.
+                                    Algún día me encantaría conocerlo — y ganarme su aprobación, que dicen
+                                    que es más difícil que la de los suegros. <span class="it">&#x1F43E;</span>
+                                </p>
+
+                                <div class="divider">&#x2726; <span class="pd">&#x2014;</span> &#x2726; <span class="pd">&#x2014;</span> &#x2726;</div>
+
+                                <p>
+                                    Quiero ser honesto, porque contigo no quiero rodeos ni medias tintas.
+                                    Estoy siguiendo tu consejo — ese que me diste de <span class="hlw">decir lo que se siente</span> —
+                                    y aquí están mis sentimientos, sin filtro, sin armaduras:
+                                </p>
+
+                                <p>
+                                    <span class="hl">Tú me gustas, Aranza.</span> Me gustas de una forma que no cabe en un mensaje de texto,
+                                    que no se puede explicar en una sola conversación. Es un sentimiento tranquilo pero profundo,
+                                    como el mar en una noche de luna llena.
+                                </p>
+
+                                <p>
+                                    Y si no sientes lo mismo, está bien. De verdad. No me arrepiento de haber escrito esto,
+                                    porque hay verdades que el silencio no merece. Pero quiero que sepas que, pase lo que pase,
+                                    <span class="hl">siempre estaré aquí</span>. Para ti. Para lo que necesites.
+                                    Para escucharte, para apoyarte, para celebrar tus victorias y sostenerte en tus caídas.
+                                </p>
+
+                                <p>
+                                    No quiero perder tu amistad. Eres demasiado valiosa para mí como para dejar que esto
+                                    se convierta en un recuerdo incómodo. Si todo lo que puedo tener es el privilegio de
+                                    seguir siendo tu amigo, lo aceptaré con gratitud infinita, porque incluso así,
+                                    tenerte en mi vida es un regalo que no pienso soltar.
+                                </p>
+
+                                <div class="divider">&#x2726; <span class="pd">&#x2014;</span> &#x2726; <span class="pd">&#x2014;</span> &#x2726;</div>
+
+                                <p class="verse-box">
+                                    <span class="em">"Hay personas que llegan sin llamar,<br>
+                                    y sin pedir permiso se quedan a vivir<br>
+                                    en los rincones más callados del alma."</span>
+                                </p>
+
+                                <p>
+                                    Así llegaste tú. Sin aviso, sin estrategia, sin buscarlo. Y aquí estás,
+                                    instalada en mis pensamientos como una melodía que no quiero dejar de escuchar,
+                                    como una constelación que apareció en mi cielo y le dio sentido a las estrellas.
+                                </p>
+
+                                <p>
+                                    No sé qué nos depara el mañana. No sé si esto será el comienzo de algo hermoso
+                                    o un recuerdo bonito que atesoraré para siempre. Pero lo que sí sé —
+                                    con toda la certeza que cabe en mi pecho — es que <span class="hl">vales cada palabra</span>
+                                    que he escrito aquí. Y que nunca, nunca, será una pérdida de tiempo haber sentido esto.
+                                </p>
+
+                                <p>
+                                    <span class="it">Gracias por ser quien eres.</span> Gracias por cada mensaje,
+                                    cada risa, cada momento compartido, cada pedacito de ti que me has regalado.
+                                    Gracias por existir de la forma en que lo haces — auténtica, hermosa, inolvidable.
+                                </p>
+
+                            </div>
+
+                            <div class="letter-closing">
+                                Con todo mi corazón,
+                                <span class="name">
+                                    Cristian
+                                    <span class="psign">&#x1F43E;</span>
+                                </span>
+                                <span class="small">Siempre aquí, siempre para ti</span>
+                            </div>
+
+                            <div class="completion-tag">&#x2726; Hecho con el corazón, escrito bajo las estrellas &#x2726;</div>
+
+                        </div>
+                    </div>
+
+                    <!-- Click hint (visible when closed) -->
+                    <div class="click-hint" id="clickHint">&#x2726; Toca para abrir &#x2726;</div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // === STARS (canvas) ===
+        (function() {
+            const canvas = document.getElementById('stars-canvas');
+            const ctx = canvas.getContext('2d');
+            let w, h, stars = [];
+
+            function resize() {
+                w = canvas.width = window.innerWidth;
+                h = canvas.height = window.innerHeight;
+            }
+            window.addEventListener('resize', resize);
+            resize();
+
+            const count = 180;
+            for (let i = 0; i < count; i++) {
+                stars.push({
+                    x: Math.random() * w,
+                    y: Math.random() * h,
+                    r: Math.random() * 1.8 + 0.3,
+                    a: Math.random(),
+                    speed: 0.005 + Math.random() * 0.015,
+                    dir: Math.random() > 0.5 ? 1 : -1
+                });
+            }
+
+            function drawStars() {
+                ctx.clearRect(0, 0, w, h);
+                for (const s of stars) {
+                    s.a += s.speed * s.dir;
+                    if (s.a > 1 || s.a < 0.1) s.dir *= -1;
+                    ctx.beginPath();
+                    ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+                    ctx.fillStyle = `rgba(200, 225, 255, ${s.a * 0.6 + 0.1})`;
+                    ctx.fill();
+                }
+                requestAnimationFrame(drawStars);
+            }
+            drawStars();
+        })();
+
+        // === FLOATING ITEMS ===
+        (function() {
+            const container = document.getElementById('floatContainer');
+            const symbols = [
+                { h: '&#x2764;', c: 'rgba(100, 170, 255,' },
+                { h: '&#x1F497;', c: 'rgba(150, 200, 255,' },
+                { h: '&#x1F43E;', c: 'rgba(180, 210, 240,' },
+                { h: '&#x2726;', c: 'rgba(130, 180, 240,' },
+                { h: '&#x2606;', c: 'rgba(200, 220, 255,' }
+            ];
+            for (let i = 0; i < 35; i++) {
+                const el = document.createElement('div');
+                el.className = 'float-item';
+                const s = symbols[Math.floor(Math.random() * symbols.length)];
+                el.innerHTML = s.h;
+                const size = 10 + Math.random() * 22;
+                el.style.cssText = `
+                    left: ${Math.random() * 100}%;
+                    font-size: ${size}px;
+                    color: ${s.c}${0.06 + Math.random() * 0.1});
+                    animation-duration: ${18 + Math.random() * 28}s;
+                    animation-delay: ${Math.random() * 28}s;
+                `;
+                container.appendChild(el);
+            }
+        })();
+
+        // === OPEN LETTER ===
+        const envelope = document.getElementById('envelope');
+        const flap = document.getElementById('envelopeFlap');
+        const seal = document.getElementById('seal');
+        const letter = document.getElementById('letter');
+        const hint = document.getElementById('clickHint');
+        let opened = false;
+
+        function openLetter(e) {
+            if (opened) return;
+            opened = true;
+
+            flap.classList.add('open');
+            seal.classList.add('open');
+            hint.classList.add('hidden');
+
+            setTimeout(() => {
+                letter.classList.add('visible');
+            }, 500);
+        }
+
+        envelope.addEventListener('click', openLetter);
+    </script>
+
+</body>
+</html>
