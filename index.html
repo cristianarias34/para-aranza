@@ -6,6 +6,50 @@
     <title>Para Aranza 💙</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Dancing+Script:wght@400;700&family=Cormorant+Garamont:ital,wght@0,300;0,400;0,600;1,400&display=swap" rel="stylesheet">
     <style>
+        /* === CONFETTI CANVAS === */
+        #confetti-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 100;
+        }
+
+        /* === TYPEWRITER === */
+        .typewriter {
+            display: inline;
+        }
+        .typewriter-cursor {
+            display: inline-block;
+            width: 2px;
+            height: 1.1em;
+            background: #7ab0ff;
+            margin-left: 2px;
+            vertical-align: text-bottom;
+            animation: blink-cursor 0.8s step-end infinite;
+        }
+        .typewriter-cursor.done {
+            animation: none;
+            opacity: 0;
+        }
+        @keyframes blink-cursor {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+        .typewriter-hidden {
+            display: none;
+        }
+        .fade-in-el {
+            opacity: 0;
+            animation: fadeInUp 0.8s ease forwards;
+        }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(12px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -417,6 +461,7 @@
 <body>
 
     <canvas id="stars-canvas"></canvas>
+    <canvas id="confetti-canvas"></canvas>
 
     <div class="float-container" id="floatContainer"></div>
 
@@ -440,11 +485,13 @@
 
                             <div class="letter-date">Bajo un cielo infinito de estrellas...</div>
 
-                            <div class="letter-greeting">Querida Aranza,</div>
+                            <div class="letter-greeting">
+                                <span class="typewriter" id="twGreeting"></span>
+                            </div>
 
-                            <div class="letter-body">
+                            <div class="letter-body" id="letterBody">
 
-                                <p>
+                                <p id="twP1" class="typewriter-hidden">
                                     Hola, Aranza. Sé que el tiempo no ha sido largo — apenas unas cuantas vueltas del reloj,
                                     algunos atardeceres compartidos a través de la luz de una pantalla. Pero hay cosas que el tiempo no mide,
                                     y lo que siento cuando hablo contigo no entiende de días ni de meses.
@@ -658,6 +705,96 @@
         const hint = document.getElementById('clickHint');
         let opened = false;
 
+        // === CONFETTI BURST ===
+        const confettiCanvas = document.getElementById('confetti-canvas');
+        const cctx = confettiCanvas.getContext('2d');
+        let confettiParticles = [];
+
+        function resizeConfetti() {
+            confettiCanvas.width = window.innerWidth;
+            confettiCanvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeConfetti);
+        resizeConfetti();
+
+        const particleShapes = ['❤', '💙', '💫', '✨', '🐾', '✦', '★', '·'];
+
+        function createBurst(cx, cy) {
+            for (let i = 0; i < 120; i++) {
+                const angle = Math.random() * Math.PI * 2;
+                const speed = 4 + Math.random() * 12;
+                const size = 10 + Math.random() * 22;
+                confettiParticles.push({
+                    x: cx,
+                    y: cy,
+                    vx: Math.cos(angle) * speed,
+                    vy: Math.sin(angle) * speed - 2,
+                    size: size,
+                    life: 1,
+                    decay: 0.005 + Math.random() * 0.01,
+                    shape: particleShapes[Math.floor(Math.random() * particleShapes.length)],
+                    rot: Math.random() * 360,
+                    rv: (Math.random() - 0.5) * 10,
+                    gravity: 0.08 + Math.random() * 0.06,
+                    alpha: 0.9 + Math.random() * 0.1
+                });
+            }
+        }
+
+        function drawConfetti() {
+            cctx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
+            for (let i = confettiParticles.length - 1; i >= 0; i--) {
+                const p = confettiParticles[i];
+                p.x += p.vx;
+                p.y += p.vy;
+                p.vy += p.gravity;
+                p.vx *= 0.985;
+                p.rot += p.rv;
+                p.life -= p.decay;
+
+                if (p.life <= 0 || p.y > confettiCanvas.height + 50) {
+                    confettiParticles.splice(i, 1);
+                    continue;
+                }
+
+                cctx.save();
+                cctx.translate(p.x, p.y);
+                cctx.rotate(p.rot * Math.PI / 180);
+                cctx.globalAlpha = p.life * p.alpha;
+                cctx.font = `${p.size}px serif`;
+                cctx.textAlign = 'center';
+                cctx.textBaseline = 'middle';
+                cctx.fillStyle = '#8cb8ff';
+                cctx.fillText(p.shape, 0, 0);
+                cctx.restore();
+            }
+            if (confettiParticles.length > 0) {
+                requestAnimationFrame(drawConfetti);
+            }
+        }
+
+        // === TYPEWRITER ===
+        function typeWriter(el, text, speed, callback) {
+            let i = 0;
+            el.classList.remove('typewriter');
+            el.textContent = '';
+            const cursor = document.createElement('span');
+            cursor.className = 'typewriter-cursor';
+            el.after(cursor);
+
+            function tick() {
+                if (i < text.length) {
+                    el.textContent += text.charAt(i);
+                    i++;
+                    setTimeout(tick, speed + Math.random() * 40);
+                } else {
+                    cursor.classList.add('done');
+                    if (callback) callback();
+                }
+            }
+            tick();
+        }
+
         function openLetter(e) {
             if (opened) return;
             opened = true;
@@ -666,9 +803,37 @@
             seal.classList.add('open');
             hint.classList.add('hidden');
 
+            // Confetti burst from center
+            createBurst(window.innerWidth / 2, window.innerHeight / 2 - 60);
+            drawConfetti();
+            setTimeout(() => createBurst(window.innerWidth / 2, window.innerHeight / 2), 300);
+
             setTimeout(() => {
                 letter.classList.add('visible');
-            }, 500);
+
+                // Typewriter on greeting
+                const twGreeting = document.getElementById('twGreeting');
+                typeWriter(twGreeting, 'Querida Aranza,', 55, () => {
+                    // Then reveal first paragraph with typewriter
+                    const p1 = document.getElementById('twP1');
+                    p1.classList.remove('typewriter-hidden');
+                    const text = p1.textContent.trim();
+                    p1.textContent = '';
+                    typeWriter(p1, text, 25, () => {
+                        // Show rest of letter with staggered fade-in
+                        const rest = document.querySelectorAll('#letterBody > p:not(#twP1), #letterBody > .divider, #letterBody > .orion-box, #letterBody > .verse-box');
+                        rest.forEach((el, i) => {
+                            el.style.animationDelay = (i * 100) + 'ms';
+                            el.classList.add('fade-in-el');
+                        });
+                        // Fade in closing and tag too
+                        document.querySelectorAll('.letter-closing, .completion-tag').forEach((el, i) => {
+                            el.style.animationDelay = (800 + i * 300) + 'ms';
+                            el.classList.add('fade-in-el');
+                        });
+                    });
+                });
+            }, 600);
         }
 
         envelope.addEventListener('click', openLetter);
