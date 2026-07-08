@@ -242,22 +242,41 @@
 
         /* Decorative corners on the letter */
         .letter::before, .letter::after {
-            content: '';
+            content: '\269C';
             position: absolute;
-            width: 40px;
-            height: 40px;
+            font-size: 22px;
             pointer-events: none;
-            opacity: 0.12;
+            opacity: 0.08;
         }
         .letter::before {
-            top: 8px; left: 8px;
-            border-top: 1px solid rgba(100, 170, 255, 0.3);
-            border-left: 1px solid rgba(100, 170, 255, 0.3);
+            top: 6px; left: 8px;
+            color: #b8d4ff;
         }
         .letter::after {
-            bottom: 8px; right: 8px;
-            border-bottom: 1px solid rgba(100, 170, 255, 0.3);
-            border-right: 1px solid rgba(100, 170, 255, 0.3);
+            bottom: 6px; right: 8px;
+            color: #ffffff;
+        }
+
+        /* Corner lily decorations on envelope */
+        .env-lily {
+            position: absolute;
+            font-size: 20px;
+            opacity: 0.06;
+            pointer-events: none;
+            z-index: 1;
+        }
+        .env-lily.tl { top: 10px; left: 12px; color: #b8d4ff; transform: rotate(-15deg); }
+        .env-lily.tr { top: 10px; right: 12px; color: #ffffff; transform: rotate(15deg) scaleX(-1); }
+        .env-lily.bl { bottom: 10px; left: 12px; color: #ffffff; transform: rotate(15deg) scaleY(-1); }
+        .env-lily.br { bottom: 10px; right: 12px; color: #b8d4ff; transform: rotate(-15deg) scaleX(-1); }
+
+        /* Lily divider in letter */
+        .lily-divider {
+            text-align: center;
+            margin: 16px 0;
+            color: rgba(150, 200, 255, 0.08);
+            font-size: 14px;
+            letter-spacing: 10px;
         }
 
         /* Orion watermark inside letter */
@@ -442,7 +461,12 @@
             50% { opacity: 0.5; transform: translateX(-50%) scale(1.02); }
         }
 
-        /* === RESPONSIVE === */
+        /* === LETTER CONTENT INITIAL STATE === */
+.letter-content-hidden .letter-body > *:not(#twP1):not(.typewriter-hidden),
+.letter-content-hidden .letter-closing,
+.letter-content-hidden .completion-tag {
+    display: none;
+}
         @media (max-width: 600px) {
             .envelope-body { min-height: 340px; }
             .letter { padding: 22px 18px 20px; }
@@ -477,9 +501,15 @@
                         <div class="seal" id="seal">&#x2764;</div>
                     </div>
 
+                    <!-- Lily corners -->
+                    <div class="env-lily tl">&#x269C;</div>
+                    <div class="env-lily tr">&#x269C;</div>
+                    <div class="env-lily bl">&#x269C;</div>
+                    <div class="env-lily br">&#x269C;</div>
+
                     <!-- Letter -->
                     <div class="letter-wrapper">
-                        <div class="letter" id="letter">
+                        <div class="letter letter-content-hidden" id="letter">
 
                             <div class="letter-watermark">&#x1F436;</div>
 
@@ -536,7 +566,7 @@
                     algo que vale la pena cuidar con delicadeza.
                                 </p>
 
-                                <div class="divider">&#x2726; <span class="pd">&#x2014;</span> &#x2726; <span class="pd">&#x2014;</span> &#x2726;</div>
+                                <div class="lily-divider">&#x269C; &#x269C; &#x269C;</div>
 
                                 <p class="orion-box">
                                     <span class="pw">&#x1F43E;</span>
@@ -678,7 +708,9 @@
                 { h: '&#x1F497;', c: 'rgba(150, 200, 255,' },
                 { h: '&#x1F43E;', c: 'rgba(180, 210, 240,' },
                 { h: '&#x2726;', c: 'rgba(130, 180, 240,' },
-                { h: '&#x2606;', c: 'rgba(200, 220, 255,' }
+                { h: '&#x2606;', c: 'rgba(200, 220, 255,' },
+                { h: '&#x269C;', c: 'rgba(255, 255, 255,' },
+                { h: '&#x269C;', c: 'rgba(100, 170, 255,' }
             ];
             for (let i = 0; i < 35; i++) {
                 const el = document.createElement('div');
@@ -820,15 +852,12 @@
                     const text = p1.textContent.trim();
                     p1.textContent = '';
                     typeWriter(p1, text, 25, () => {
+                        // Reveal all hidden content
+                        document.getElementById('letter').classList.remove('letter-content-hidden');
                         // Show rest of letter with staggered fade-in
-                        const rest = document.querySelectorAll('#letterBody > p:not(#twP1), #letterBody > .divider, #letterBody > .orion-box, #letterBody > .verse-box');
+                        const rest = document.querySelectorAll('#letterBody > *:not(#twP1), .letter-closing, .completion-tag');
                         rest.forEach((el, i) => {
                             el.style.animationDelay = (i * 100) + 'ms';
-                            el.classList.add('fade-in-el');
-                        });
-                        // Fade in closing and tag too
-                        document.querySelectorAll('.letter-closing, .completion-tag').forEach((el, i) => {
-                            el.style.animationDelay = (800 + i * 300) + 'ms';
                             el.classList.add('fade-in-el');
                         });
                     });
